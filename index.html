@@ -48,7 +48,7 @@
         .active-cards-container {
             display: flex;
             justify-content: space-around;
-            align-items: center; /* ממורכז אנכית */
+            align-items: flex-start; /* שינוי חזרה ל-flex-start כדי להתאים לגבהים שונים */
             gap: 20px;
             min-height: 500px; /* גובה מינימלי */
         }
@@ -78,7 +78,7 @@
             border-radius: 15px; /* פינות עגולות יותר */
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             padding: 20px 25px;
-            min-height: 450px;
+            min-height: 450px; /* גובה מינימלי */
             display: flex;
             flex-direction: column;
             position: relative;
@@ -125,6 +125,7 @@
             padding-bottom: 10px;
         }
         
+        /* עדכון עיצוב התוכן של הקלף */
         .card-content h4 {
             font-size: 1.1rem;
             color: #4a4a8a;
@@ -137,6 +138,27 @@
             line-height: 1.6;
             color: #444;
         }
+
+        .card-content ul {
+            padding-right: 20px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+        .card-content li {
+            margin-bottom: 5px;
+        }
+        .card-content p.description { /* סגנון מיוחד לתיאור השיעור */
+            font-weight: 500;
+            color: #333;
+            border-right: 3px solid #00C49A;
+            padding-right: 10px;
+        }
+        #student-card-slot .card-content p { /* איפוס סגנון עבור קלף תלמיד */
+             border-right: none;
+             padding-right: 0;
+             font-weight: normal;
+        }
+
 
         /* --- כפתורי ערבוב נפרדים --- */
         .shuffle-button {
@@ -305,46 +327,139 @@
             }
         ];
 
+        // ==========================================================
+        // !!! נוסף קלף אנגלית למערך המשימות !!!
+        // ==========================================================
         const tasksData = [
             {
                 title: "מדעים",
                 subtitle: "תוכן (כיתה ז'): מאפייני חיים",
-                task: "השוו בטבלה בין מאפייני החיים השונים (נשימה, תזונה, רבייה, תגובה לגירויים וכו') כפי שהם באים לידי ביטוי בצמחים ובבעלי חיים."
+                lesson: {
+                    description: "שיעור השוואתי הבוחן את מאפייני החיים כפי שהם באים לידי ביטוי בצמחים ובבעלי חיים.",
+                    knowledge_goals: [
+                        "התלמיד יגדיר את 7 מאפייני החיים.",
+                        "התלמיד יסביר כיצד כל מאפיין חיים בא לידי ביטוי בצמח ובבעל חיים."
+                    ],
+                    skill_goals: [
+                        "ארגון מידע בטבלה משווה.",
+                        "הסקת מסקנות על הדומה והשונה."
+                    ]
+                }
             },
             {
                 title: "מתמטיקה",
                 subtitle: "תוכן (כיתה ז'): יחס ופרופורציה",
-                task: "פתרו בעיה מילולית בנושא יחס ופרופורציה, הקשורה למתכון אפייה (למשל: 'המתכון דורש 3 כוסות קמח ל-2 כוסות סוכר. כמה סוכר נצטרך אם נשתמש ב-5 כוסות קמח?')."
+                lesson: {
+                    description: "שיעור הממחיש פתרון בעיות יחס ופרופורציה דרך יישום במתכוני אפייה.",
+                    knowledge_goals: [
+                        "התלמיד יסביר את המושג 'יחס' ו'פרופורציה'.",
+                        "התלמיד יזהה את הרכיבים השונים בבעיה מילולית."
+                    ],
+                    skill_goals: [
+                        "תרגום בעיה מילולית לתרגיל מתמטי.",
+                        "שימוש ב'ערך משולש' לפתרון בעיות פרופורציה."
+                    ]
+                }
             },
             {
                 title: "תנ\"ך ממלכתי",
                 subtitle: "תוכן (כיתה ז'): סיפורי דוד ושאול",
-                task: "בחרו דמות אחת מסיפורי דוד ושאול (למשל: יהונתן, מיכל, שמואל). כתבו קטע קצר המתאר את מערכת היחסים שלה עם דוד, ובססו את דבריכם על שני פסוקים מהטקסט."
+                lesson: {
+                    description: "שיעור ניתוח דמות המתמקד במערכות יחסים מורכבות בסיפורי דוד ושאול.",
+                    knowledge_goals: [
+                        "התלמיד יתאר את מערכת היחסים בין דוד לדמות משנה (יהונתן, מיכל וכו').",
+                        "התלמיד יצטט פסוקים רלוונטיים המבססים את תיאורו."
+                    ],
+                    skill_goals: [
+                        "קריאה מפרשת של טקסט מקראי.",
+                        "איתור וציטוט ראיות מהטקסט.",
+                        "כתיבת טיעון קצר ומנומק."
+                    ]
+                }
             },
             {
                 title: "גיאוגרפיה",
                 subtitle: "תוכן (כיתה ז'): מדבור",
-                task: "צרו תרשים זרימה ויזואלי (או מפת מושגים) המתאר את הגורמים וההשפעות של תהליך המדבור באזורי ספר המדבר בישראל."
+                lesson: {
+                    description: "שיעור חזותי העוסק בגורמים ובהשפעות של תהליך המדבור בישראל.",
+                    knowledge_goals: [
+                        "התלמיד יגדיר מהו תהליך המדבור.",
+                        "התלמיד ימנה 2 גורמים אנושיים ו-2 גורמים טבעיים למדבור.",
+                        "התלמיד יתאר 3 השפעות של מדבור."
+                    ],
+                    skill_goals: [
+                        "זיהוי קשרי סיבה ותוצאה.",
+                        "יצירת ייצוג חזותי (תרשים זרימה/מפת מושגים) של מידע."
+                    ]
+                }
             },
             {
                 title: "היסטוריה חמ\"ד",
                 subtitle: "תוכן (כיתה ז'): תור הזהב בספרד",
-                task: "הכינו 5 שקפים למצגת קצרה המתארת את חיי הקהילה היהודית בספרד בתקופת 'תור הזהב' (בהיבטי כלכלה, תרבות ויחסים עם השלטון המוסלמי)."
+                lesson: {
+                    description: "שיעור סיכום המציג את היבטי המפתח בחיי הקהילה היהודית בספרד בתקופת 'תור הזהב'.",
+                    knowledge_goals: [
+                        "התלמיד יתאר את המבנה החברתי-כלכלי של יהודי ספרד.",
+                        "התלמיד ייתן דוגמה לפריחה תרבותית (שירה, פילוסופיה).",
+                    ],
+                    skill_goals: [
+                        "סיכום מידע ממקורות שונים.",
+                        "ארגון מידע במבנה של מצגת (כותרת, נקודות).",
+                        "תמצות רעיונות מרכזיים."
+                    ]
+                }
             },
             {
                 title: "היסטוריה חמ\"ד (אוריינות)",
                 subtitle: "מיומנות: השוואת מקורות",
-                task: "קראו שני מקורות היסטוריים קצרים (ראשוני ומשני) המתארים את מסעי הצלב. זהו את נקודת המבט של כל כותב, והסבירו במה הן דומות ובמה הן שונות."
+                lesson: {
+                    description: "שיעור אוריינות היסטורית המלמד כיצד לנתח מקורות עם נקודות מבט שונות (למשל, על מסעי הצלב).",
+                    knowledge_goals: [
+                        "התלמיד יסביר מהו מקור ראשוני ומהו מקור משני.",
+                        "התלמיד יזהה את נקודת המבט של הכותב בכל מקור."
+                    ],
+                    skill_goals: [
+                        "השוואה בין מקורות מידע.",
+                        "זיהוי נקודת מבט, הטיה ועובדות.",
+                        "ניסוח מסקנה על בסיס השוואה."
+                    ]
+                }
             },
             {
                 title: "מדעים (אוריינות)",
                 subtitle: "מיומנות: ניתוח גרף",
-                task: "לפניכם גרף עמודות המתאר כמות משקעים שנתית באזורים שונים. נתחו את הגרף וכתבו 3 מסקנות שונות שניתן להסיק ממנו על הקשר בין כמות המשקעים לסוג הצמחייה."
+                lesson: {
+                    description: "שיעור אוריינות מדעית המתמקד בקריאה, ניתוח והסקת מסקנות מגרף עמודות (למשל, כמות משקעים).",
+                    knowledge_goals: [
+                        "התלמיד יזהה את המשתנים המוצגים בגרף (ציר X וציר Y).",
+                        "התלמיד יסביר את הקשר בין המשתנים בגרף."
+                    ],
+                    skill_goals: [
+                        "קריאת נתונים מתוך גרף.",
+                        "ניתוח מגמות ודפוסים בגרף.",
+                        "כתיבת מסקנה מדעית מבוססת נתונים."
+                    ]
+                }
+            },
+            {
+                title: "אנגלית",
+                subtitle: "תוכן (כיתה ז'): קריאת הבנה",
+                lesson: {
+                    description: "שיעור קריאת הבנה (Unseen) שבו התלמידים קוראים טקסט קצר ועונים על שאלות.",
+                    knowledge_goals: [
+                        "התלמיד יזהה 5-7 מילות מפתח חדשות מתוך הטקסט.",
+                        "התלמיד יבין את הרעיון המרכזי של הסיפור."
+                    ],
+                    skill_goals: [
+                        "קריאת טקסט באנגלית והבנת הנקרא.",
+                        "איתור מידע ספציפי בטקסט (Scanning).",
+                        "מענה על שאלות WH (Who, What, Where, When)."
+                    ]
+                }
             }
         ];
 
         // --- הפניות לרכיבי DOM ---
-        // עכשיו זה בטוח כי הסקריפט בסוף הדף
         const studentCardSlot = document.getElementById('student-card-slot');
         const taskCardSlot = document.getElementById('task-card-slot');
         const shuffleStudentButton = document.getElementById('shuffleStudentButton');
@@ -357,11 +472,9 @@
          */
         async function renderStudentCard(student) {
             const cardElement = studentCardSlot;
-            cardElement.classList.add('is-flipping'); // התחל אנימציית היפוך (0.6 שניות)
-            
-            await new Promise(r => setTimeout(r, 300)); // המתן לאמצע האנימציה
+            cardElement.classList.add('is-flipping');
+            await new Promise(r => setTimeout(r, 300)); 
 
-            // החלף את התוכן בזמן שהקלף מוסתר
             let profileHtml = '';
             for (const [key, value] of Object.entries(student.profile)) {
                 profileHtml += `<h4>${key}</h4><p>${value}</p>`;
@@ -372,29 +485,35 @@
                 <div class="card-content">${profileHtml}</div>
             `;
             
-            cardElement.classList.remove('is-flipping'); // סיים את האנימציה
+            cardElement.classList.remove('is-flipping');
         }
 
         /**
-         * יוצר ומציג קלף משימה עם אנימציית היפוך
+         * יוצר ומציג קלף משימה עם אנימציית היפוך (מעודכן)
          */
         async function renderTaskCard(task) {
             const cardElement = taskCardSlot;
-            cardElement.classList.add('is-flipping'); // התחל אנימציית היפוך
-            
-            await new Promise(r => setTimeout(r, 300)); // המתן לאמצע האנימציה
+            cardElement.classList.add('is-flipping');
+            await new Promise(r => setTimeout(r, 300));
+
+            // יצירת HTML עבור רשימות
+            const knowledgeGoalsHtml = task.lesson.knowledge_goals.map(goal => `<li>${goal}</li>`).join('');
+            const skillGoalsHtml = task.lesson.skill_goals.map(goal => `<li>${goal}</li>`).join('');
 
             // החלף תוכן
             cardElement.innerHTML = `
                 <div class="card-title">${task.title}</div>
                 <div class="card-subtitle">${task.subtitle}</div>
                 <div class="card-content">
-                    <h4>משימה:</h4>
-                    <p>${task.task}</p>
+                    <p class="description">${task.lesson.description}</p>
+                    <h4>מטרות ידע:</h4>
+                    <ul>${knowledgeGoalsHtml}</ul>
+                    <h4>מטרות מיומנות:</h4>
+                    <ul>${skillGoalsHtml}</ul>
                 </div>
             `;
             
-            cardElement.classList.remove('is-flipping'); // סיים את האנימציה
+            cardElement.classList.remove('is-flipping');
         }
 
         /**
@@ -421,7 +540,9 @@
         shuffleStudentButton.addEventListener('click', drawRandomStudent);
         shuffleTaskButton.addEventListener('click', drawRandomTask);
         
-        // טעינה ראשונית - ללא אנימציה
+        // --- טעינה ראשונית (מעודכן) ---
+        
+        // טעינת תלמיד ראשוני
         const initialStudent = studentsData[Math.floor(Math.random() * studentsData.length)];
         let profileHtml = '';
         for (const [key, value] of Object.entries(initialStudent.profile)) {
@@ -433,13 +554,20 @@
             <div class="card-content">${profileHtml}</div>
         `;
 
+        // טעינת משימה ראשונית
         const initialTask = tasksData[Math.floor(Math.random() * tasksData.length)];
+        const knowledgeGoalsHtml = initialTask.lesson.knowledge_goals.map(goal => `<li>${goal}</li>`).join('');
+        const skillGoalsHtml = initialTask.lesson.skill_goals.map(goal => `<li>${goal}</li>`).join('');
+        
         taskCardSlot.innerHTML = `
             <div class="card-title">${initialTask.title}</div>
             <div class="card-subtitle">${initialTask.subtitle}</div>
             <div class="card-content">
-                <h4>משימה:</h4>
-                <p>${initialTask.task}</p>
+                <p class="description">${initialTask.lesson.description}</p>
+                <h4>מטרות ידע:</h4>
+                <ul>${knowledgeGoalsHtml}</ul>
+                <h4>מטרות מיומנות:</h4>
+                <ul>${skillGoalsHtml}</ul>
             </div>
         `;
 
