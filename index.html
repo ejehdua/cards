@@ -343,9 +343,12 @@
             }
         ];
 
-        // --- הפניות לרכיבי DOM (יוגדרו אחרי טעינת העמוד) ---
-        let studentCardSlot, taskCardSlot, shuffleStudentButton, shuffleTaskButton;
-
+        // --- הפניות לרכיבי DOM ---
+        // עכשיו זה בטוח כי הסקריפט בסוף הדף
+        const studentCardSlot = document.getElementById('student-card-slot');
+        const taskCardSlot = document.getElementById('task-card-slot');
+        const shuffleStudentButton = document.getElementById('shuffleStudentButton');
+        const shuffleTaskButton = document.getElementById('shuffleTaskButton');
 
         // --- פונקציות ---
 
@@ -369,8 +372,7 @@
                 <div class="card-content">${profileHtml}</div>
             `;
             
-            // סיים את האנימציה (החזר את הקלף)
-            cardElement.classList.remove('is-flipping');
+            cardElement.classList.remove('is-flipping'); // סיים את האנימציה
         }
 
         /**
@@ -392,8 +394,7 @@
                 </div>
             `;
             
-            // סיים את האנימציה
-            cardElement.classList.remove('is-flipping');
+            cardElement.classList.remove('is-flipping'); // סיים את האנימציה
         }
 
         /**
@@ -402,7 +403,7 @@
         function drawRandomStudent() {
             const randomStudentIndex = Math.floor(Math.random() * studentsData.length);
             const selectedStudent = studentsData[randomStudentIndex];
-            renderStudentCard(selectedStudent); // הפונקציה האסינכרונית תרוץ
+            renderStudentCard(selectedStudent);
         }
 
         /**
@@ -411,21 +412,37 @@
         function drawRandomTask() {
             const randomTaskIndex = Math.floor(Math.random() * tasksData.length);
             const selectedTask = tasksData[randomTaskIndex];
-            renderTaskCard(selectedTask); // הפונקציה האסינכרונית תרוץ
+            renderTaskCard(selectedTask);
         }
 
         // --- הפעלה ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // !!! הגדרה קריטית: מוצאים את הרכיבים רק אחרי שהדף נטען
-            studentCardSlot = document.getElementById('student-card-slot');
-            taskCardSlot = document.getElementById('task-card-slot');
-            shuffleStudentButton = document.getElementById('shuffleStudentButton');
-            shuffleTaskButton = document.getElementById('shuffleTaskButton');
+        
+        // חבר את הכפתורים לפונקציות
+        shuffleStudentButton.addEventListener('click', drawRandomStudent);
+        shuffleTaskButton.addEventListener('click', drawRandomTask);
+        
+        // טעינה ראשונית - ללא אנימציה
+        const initialStudent = studentsData[Math.floor(Math.random() * studentsData.length)];
+        let profileHtml = '';
+        for (const [key, value] of Object.entries(initialStudent.profile)) {
+            profileHtml += `<h4>${key}</h4><p>${value}</p>`;
+        }
+        studentCardSlot.innerHTML = `
+            <div class="card-title">${initialStudent.title}</div>
+            <div class="card-subtitle">${initialStudent.subtitle}</div>
+            <div class="card-content">${profileHtml}</div>
+        `;
 
-            // האזנה לכפתורים
-            shuffleStudentButton.addEventListener('click', drawRandomStudent);
-            shuffleTaskButton.addEventListener('click', drawRandomTask);
-            
-            // טעינה ראשונית - ללא אנימציה
-            const initialStudent = studentsData[Math.floor(Math.random() * studentsData.length)]; // הצגת תלמיד אקראי בהתחלה
-            let profileHtml = '';
+        const initialTask = tasksData[Math.floor(Math.random() * tasksData.length)];
+        taskCardSlot.innerHTML = `
+            <div class="card-title">${initialTask.title}</div>
+            <div class="card-subtitle">${initialTask.subtitle}</div>
+            <div class="card-content">
+                <h4>משימה:</h4>
+                <p>${initialTask.task}</p>
+            </div>
+        `;
+
+    </script>
+</body>
+</html>
