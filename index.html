@@ -4,15 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>מסמלצים למידה פרסונלית</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> 
+<style>
         /* --- הגדרות כלליות --- */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f7f6;
+            font-family: 'Fredoka', sans-serif; /* פונט משחקי! */
+            background-color: #fdfdfc; /* רקע קרמי בהיר */
             color: #333;
             margin: 0;
             padding: 20px;
-            overflow-x: hidden; /* למנוע גלילה אופקית */
+            overflow-x: hidden;
         }
 
         /* --- פריסה ראשית (עם הפתקה בצד) --- */
@@ -22,70 +26,99 @@
         }
 
         .main-area {
-            flex: 3; /* אזור הסימולציה יתפוס 3/4 מהרוחב */
+            flex: 3;
         }
 
         .notes-area {
-            flex: 1; /* הפתקה תתפוס 1/4 מהרוחב */
-            min-width: 250px; /* רוחב מינימלי לפתקה */
+            flex: 1;
+            min-width: 280px;
         }
 
-        /* --- כותרות וכפתור כללי (הוסר - הוחלף באייקונים) --- */
+        /* --- כותרות --- */
         h1 {
             text-align: center;
-            color: #005a9c;
-            margin-bottom: 30px;
+            color: #4a4a8a; /* סגול-כחול עמוק */
+            font-weight: 600;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
+            margin-bottom: 30px; /* הוספתי מרווח תחתון */
         }
 
         /* --- אזור הקלפים הפעילים --- */
         .active-cards-container {
             display: flex;
             justify-content: space-around;
-            align-items: flex-start;
+            align-items: center; /* ממורכז אנכית */
             gap: 20px;
-            min-height: 500px;
+            min-height: 500px; /* גובה מינימלי */
         }
 
-        /* --- עיצוב קלף בסיסי --- */
+        /* --- עיצוב קלף --- */
         .card-wrapper {
-            position: relative; /* מאפשר מיקום מוחלט של אייקון הערבוב */
+            position: relative;
             width: 45%;
-            /* perspective: 1000px; */ /* עבור אנימציית היפוך תלת מימדית, אפשר להפעיל */
+            perspective: 1000px; /* חובה לאנימציית היפוך */
+            transition: transform 0.3s ease;
+        }
+        
+        /* הטיה קלה לקלפים */
+        #student-card-wrapper {
+            transform: rotate(-2.5deg);
+        }
+        #task-card-wrapper {
+            transform: rotate(2.5deg);
+        }
+        .card-wrapper:hover {
+            transform: scale(1.03) translateY(-5px) rotate(0deg) !important; /* יישור במעבר עכבר */
+            z-index: 10;
         }
 
         .card {
             background-color: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            padding: 20px;
-            min-height: 400px; /* גובה מינימלי לקלף */
+            border-radius: 15px; /* פינות עגולות יותר */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 20px 25px;
+            min-height: 450px;
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
             position: relative;
-            /* transform-style: preserve-3d; */ /* עבור אנימציית היפוך תלת מימדית, אפשר להפעיל */
+            /* הגדרות לאנימציית היפוך */
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
         }
 
-        /* אנימציית שליפה */
-        .card.fade-out {
-            opacity: 0;
-            transform: translateY(20px) scale(0.95);
-        }
-        .card.fade-in {
-            opacity: 1;
-            transform: translateY(0) scale(1);
+        /* אנימציית היפוך */
+        .card.is-flipping {
+            transform: rotateY(180deg);
         }
 
         .card-title {
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 1.8rem;
+            font-weight: 600;
             margin-bottom: 10px;
         }
+        
+        /* צבעים שונים לקלפים */
+        #student-card-slot .card-title {
+            color: #d18a00; /* צהוב-כתום */
+        }
+        #student-card-slot .card {
+            border-bottom: 8px solid #FFC300; /* צהוב-דבש */
+            box-shadow: 0 5px 20px #ffc30040; /* זוהר צהוב */
+        }
+
+        #task-card-slot .card-title {
+            color: #008a6c; /* טורקיז כהה */
+        }
+        #task-card-slot .card {
+            border-bottom: 8px solid #00C49A; /* טורקיז עז */
+            box-shadow: 0 5px 20px #00c49a40; /* זוהר טורקיז */
+        }
+
 
         .card-subtitle {
-            font-size: 1rem;
-            font-weight: normal;
+            font-size: 1.1rem;
+            font-weight: 500;
             color: #555;
             margin-bottom: 15px;
             border-bottom: 2px solid #eee;
@@ -93,170 +126,86 @@
         }
         
         .card-content h4 {
-            font-size: 1rem;
-            color: #005a9c;
+            font-size: 1.1rem;
+            color: #4a4a8a;
             margin-top: 15px;
             margin-bottom: 5px;
         }
-
-        .card-content ul {
-            padding-right: 20px;
-            margin: 0;
-        }
         
         .card-content li, .card-content p {
-            font-size: 0.95rem;
+            font-size: 1rem;
             line-height: 1.6;
             color: #444;
-        }
-
-        /* --- צבעים שונים לקלפים --- */
-        #student-card-slot .card {
-            border-top: 5px solid #007aff; /* כחול לתלמיד */
-        }
-
-        #task-card-slot .card {
-            border-top: 5px solid #34c759; /* ירוק למשימה */
         }
 
         /* --- כפתורי ערבוב נפרדים --- */
         .shuffle-button {
             position: absolute;
-            top: 10px;
-            left: 10px; /* מיקום משמאל למעלה */
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
+            top: 15px;
+            left: 15px;
+            border: 2px solid #fff;
             border-radius: 50%;
-            width: 35px;
-            height: 35px;
+            width: 45px; /* גדול יותר */
+            height: 45px; /* גדול יותר */
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
             z-index: 10;
+            /* אנימציה קפיצית */
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .shuffle-button i {
-            color: #555;
-            font-size: 1rem;
+            color: white;
+            font-size: 1.2rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
         .shuffle-button:hover {
-            background-color: #e0e0e0;
-            transform: rotate(15deg); /* סיבוב קל באוויר */
+            transform: scale(1.15) rotate(20deg); /* אפקט קפיצה */
         }
-        /* עבור כפתור הערבוב של התלמיד, צבע כחול */
-        #student-card-slot .shuffle-button {
-            background-color: #e0f0ff;
-            border-color: #a0cfff;
+        /* צבעים תואמים */
+        #student-card-wrapper .shuffle-button {
+            background-color: #FFC300;
         }
-        #student-card-slot .shuffle-button:hover {
-            background-color: #c0e0ff;
+        #task-card-wrapper .shuffle-button {
+            background-color: #00C49A;
         }
-        /* עבור כפתור הערבוב של המשימה, צבע ירוק */
-        #task-card-slot .shuffle-button {
-            background-color: #e0ffe0;
-            border-color: #a0ffc0;
-        }
-        #task-card-slot .shuffle-button:hover {
-            background-color: #c0ffc0;
-        }
-
-        /* --- אזור ה"חפיסה" הויזואלית --- */
-        .deck-area {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-            text-align: center;
-        }
-        
-        .deck-area h3 {
-            color: #777;
-            font-weight: 500;
-            margin-bottom: 20px;
-        }
-
-        .visual-deck-container {
-            display: flex;
-            justify-content: center;
-            position: relative;
-            height: 80px; /* גובה להצגת הקלפים בערימה */
-            margin-bottom: 30px;
-        }
-
-        .deck-stack {
-            position: absolute;
-            background-color: #eee;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            width: 120px;
-            height: 70px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.9rem;
-            color: #666;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            cursor: default;
-        }
-
-        .deck-stack.student-deck {
-            background-color: #e0f0ff;
-            border-color: #a0cfff;
-            color: #007aff;
-        }
-
-        .deck-stack.task-deck {
-            background-color: #e0ffe0;
-            border-color: #a0ffc0;
-            color: #34c759;
-        }
-        
-        /* אפקט ערימה קטנה */
-        .deck-stack:nth-child(2) { transform: translateX(5px) translateY(5px); opacity: 0.8; z-index: 2; }
-        .deck-stack:nth-child(3) { transform: translateX(10px) translateY(10px); opacity: 0.6; z-index: 1; }
-        /* וכן הלאה, לפי מספר הקלפים */
-
 
         /* --- עיצוב הפתקה בצד --- */
         .notes-area h3 {
-            color: #333;
+            color: #4a4a8a;
             text-align: center;
+            font-weight: 600;
+            font-size: 1.5rem;
         }
 
         #insights-notepad {
             width: 100%;
-            height: 70vh; /* גובה רב לכתיבה נוחה */
-            padding: 15px;
-            font-family: 'Arial', sans-serif; /* פונט שמרגיש כמו פתקה */
+            height: 70vh;
+            font-family: 'Fredoka', sans-serif;
             font-size: 1rem;
-            border: 1px solid #e6db74;
-            background-color: #ffc; /* צהוב בהיר קלאסי */
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
-            line-height: 1.5;
-            resize: vertical; /* אפשר לשנות גובה */
-            box-sizing: border-box; /* כולל פאדינג ובורדר ברוחב */
+            border: 1px solid #fbc02d;
+            border-radius: 5px;
+            box-sizing: border-box;
+            /* מראה דף מחברת */
+            background-color: #fff9c4;
+            background-image:
+                linear-gradient(#ffab91 1px, transparent 1px), /* שוליים אדומים בצד */
+                repeating-linear-gradient(#fff9c4 0px, #fff9c4 23px, #e3f2fd 24px); /* שורות כחולות */
+            line-height: 24px;
+            padding: 15px 15px 15px 30px; /* ריווח פנימי עם מקום לשוליים */
+            background-position: 25px 0; /* מיקום השוליים האדומים */
+            resize: vertical;
         }
+        
         /* רספונסיביות */
         @media (max-width: 900px) {
-            .simulation-container {
-                flex-direction: column;
-            }
-            .main-area, .notes-area {
-                flex: none;
-                width: 100%;
-            }
-            .active-cards-container {
-                flex-direction: column;
-                align-items: center;
-            }
-            .card-wrapper {
-                width: 90%;
-                margin-bottom: 20px;
-            }
-            #insights-notepad {
-                height: 40vh; /* קטן יותר במובייל */
-            }
+            .simulation-container { flex-direction: column; }
+            .main-area, .notes-area { width: 100%; }
+            .active-cards-container { flex-direction: column; align-items: center; }
+            .card-wrapper { width: 90%; margin-bottom: 20px; }
+            #insights-notepad { height: 40vh; }
         }
     </style>
 </head>
@@ -264,45 +213,31 @@
 
     <div class="simulation-container">
         <div class="main-area">
-            <h1>מסמלצים למידה פרסונלית</h1>
+            <h1>מסמלצים למידה פרסונלית 🎲</h1>
 
             <div class="active-cards-container">
                 <div class="card-wrapper" id="student-card-wrapper">
-                    <div class="shuffle-button" id="shuffleStudentButton" title="ערבב תלמיד"><i class="fas fa-sync-alt"></i></div>
+                    <div class="shuffle-button" id="shuffleStudentButton" title="ערבב תלמיד"><i class="fas fa-random"></i></div>
                     <div class="card" id="student-card-slot">
                         </div>
                 </div>
                 <div class="card-wrapper" id="task-card-wrapper">
-                    <div class="shuffle-button" id="shuffleTaskButton" title="ערבב משימה"><i class="fas fa-sync-alt"></i></div>
+                    <div class="shuffle-button" id="shuffleTaskButton" title="ערבב משימה"><i class="fas fa-random"></i></div>
                     <div class="card" id="task-card-slot">
                         </div>
                 </div>
             </div>
 
-            <div class="deck-area">
-                <h3>המצב הנוכחי של החפיסות</h3>
-                <div class="visual-deck-container">
-                    <div class="deck-stack student-deck" id="student-deck-visual">
-                        <span id="student-count">5</span> תלמידים
-                    </div>
-                </div>
-                <div class="visual-deck-container">
-                    <div class="deck-stack task-deck" id="task-deck-visual">
-                        <span id="task-count">7</span> משימות
-                    </div>
-                </div>
             </div>
-        </div>
 
         <div class="notes-area">
-            <h3>📝 פתקת תובנות אישית</h3>
-            <textarea id="insights-notepad" placeholder="כתבו כאן תובנות, שאלות, רעיונות להתאמה, פיגומים נדרשים..."></textarea>
+            <h3>📝 פתקת תובנות</h3>
+            <textarea id="insights-notepad" placeholder="כתבו כאן תובנות, שאלות, רעיונות להתאמה..."></textarea>
         </div>
     </div>
 
     <script>
         // --- מאגר הנתונים (Data) ---
-
         const studentsData = [
             {
                 title: "אורי",
@@ -326,7 +261,7 @@
                     "מיומנויות": "קריאה איטית, כתיבה בסיסית. מצטיינת בויזואליזציה (תרשימים, ציורים, מודלים).",
                     "מוטיבציה": "גבוהה מאוד. רוצה להצליח כמו כולם.",
                     "שייכות": "שייכות חברתית חזקה. אהובה ומשפיעה.",
-                    "תחושת מסוגלות": "נמוכה מאוד בקריאה ('אני גרועה בזה'). גבוהה מאוד בהבעה יצירתית.",
+                    "תחושת מסוגלות": "נמוכה מאוד בקריאה ('אני גרועה בזה'). גבוהה מאוד בהבעה יצירטית.",
                     "ניהול למידה": "יודעת לבקש עזרה. לא יודעת לחלק זמן. טקסטים ארוכים מתישים אותה."
                 }
             },
@@ -336,173 +271,4 @@
                 profile: {
                     "ידע ורמות חשיבה": "ידע רחב ומעמיק, מצטיין בניתוח, הערכה ויצירה. מתקשה עם עומק רגשי או תרבותי בטקסטים ועם פירוש רמזים חברתיים.",
                     "נתונים אישיים": "ילד יחיד, עולה חדש מסביבה דיגיטלית מתקדמת. עברית טובה אך חסר עומק תרבותי.",
-                    "מיומנויות": "מעולה בפתרון בעיות. מיומנויות תקשורת בין-אישית נמוכות. מתקשה מאוד בעבודת צוות.",
-                    "מוטיבציה": "לומד בשביל הישגים (חיצונית). מוטיבציה פנימית נמוכה.",
-                    "שייכות": "מרגיש זר, כמעט ללא חברים. 'שקוף' חברתית.",
-                    "תחושת מסוגלות": "גבוהה מאוד במשימות קוגניטיביות. נמוכה במשימות שדורשות שיח, הבעה או עבודה יחד.",
-                    "ניהול למידה": "עצמאי מאוד, משלים חומר לבד, אך לא משתף פעולה."
-                }
-            },
-            {
-                title: "הודיה",
-                subtitle: "כיתה ז'",
-                profile: {
-                    "ידע ורמות חשיבה": "ידע בסיסי ולא יציב (קושי בלמידה עקבית). מבינה ומיישמת, מתקשה בניתוח והסקת מסקנות. מציפה רעיונות יצירתיים, לא תמיד מבוססים.",
-                    "נתונים אישיים": "משפחה חמה, אך עם עומס בבית (אב עובד שעות רבות, אם מתמודדת עם קשיים בריאותיים).",
-                    "מיומנויות": "ריכוז נמוך, סף תסכול נמוך. יכולת גבוהה בעבודה יצירתית ומעשית (ציור, חפצים). זקוקה למסגרות קצרות וברורות.",
-                    "מוטיבציה": "גבוהה בתחילת משימה, אך יורדת מהר.",
-                    "שייכות": "מרגישה שמכירים אותה, אך לא מעריכים. תופסת עצמה כ'מפריעה'.",
-                    "תחושת מסוגלות": "נמוכה בלמידה פורמלית. גבוהה מאוד במשימות יצירתיות ומעשיות.",
-                    "ניהול למידה": "לא מצליחה לנהל זמן לבד. צריכה ליווי, תזכורות וחלוקה למשימות קטנות."
-                }
-            },
-            {
-                title: "ליאן",
-                subtitle: "כיתה ח'",
-                profile: {
-                    "ידע ורמות חשיבה": "ידע טוב אך עם 'חורים' בגלל היעדרויות. מסוגלת לנתח, אך מתקשה ליישם בעקביות. נוטה לשינון במקום הבנה.",
-                    "נתונים אישיים": "אמא חד הורית. לוקחת הרבה אחריות בבית על אחים. עומס רגשי משמעותי.",
-                    "מיומנויות": "כתיבה טובה, זיכרון טוב לטווח קצר. מתקשה בארגון חומר למבחנים.",
-                    "מוטיבציה": "נמוכה מאוד. מרגישה מותשת.",
-                    "שייכות": "יש לה 2 חברות טובות, אך לא מרגישה חלק מהכיתה.",
-                    "תחושת מסוגלות": "נמוכה. ('אני לא מספיק טובה'). הצלחות קטנות משפיעות עליה מיד לטובה.",
-                    "ניהול למידה": "בדרך כלל לא מכינה שיעורי בית (מתוך עומס ועייפות, לא חוסר רצון)."
-                }
-            }
-        ];
-
-        const tasksData = [
-            {
-                title: "מדעים",
-                subtitle: "תוכן (כיתה ז'): מאפייני חיים",
-                task: "השוו בטבלה בין מאפייני החיים השונים (נשימה, תזונה, רבייה, תגובה לגירויים וכו') כפי שהם באים לידי ביטוי בצמחים ובבעלי חיים."
-            },
-            {
-                title: "מתמטיקה",
-                subtitle: "תוכן (כיתה ז'): יחס ופרופורציה",
-                task: "פתרו בעיה מילולית בנושא יחס ופרופורציה, הקשורה למתכון אפייה (למשל: 'המתכון דורש 3 כוסות קמח ל-2 כוסות סוכר. כמה סוכר נצטרך אם נשתמש ב-5 כוסות קמח?')."
-            },
-            {
-                title: "תנ\"ך ממלכתי",
-                subtitle: "תוכן (כיתה ז'): סיפורי דוד ושאול",
-                task: "בחרו דמות אחת מסיפורי דוד ושאול (למשל: יהונתן, מיכל, שמואל). כתבו קטע קצר המתאר את מערכת היחסים שלה עם דוד, ובססו את דבריכם על שני פסוקים מהטקסט."
-            },
-            {
-                title: "גיאוגרפיה",
-                subtitle: "תוכן (כיתה ז'): מדבור",
-                task: "צרו תרשים זרימה ויזואלי (או מפת מושגים) המתאר את הגורמים וההשפעות של תהליך המדבור באזורי ספר המדבר בישראל."
-            },
-            {
-                title: "היסטוריה חמ\"ד",
-                subtitle: "תוכן (כיתה ז'): תור הזהב בספרד",
-                task: "הכינו 5 שקפים למצגת קצרה המתארת את חיי הקהילה היהודית בספרד בתקופת 'תור הזהב' (בהיבטי כלכלה, תרבות ויחסים עם השלטון המוסלמי)."
-            },
-            {
-                title: "היסטוריה חמ\"ד (אוריינות)",
-                subtitle: "מיומנות: השוואת מקורות",
-                task: "קראו שני מקורות היסטוריים קצרים (ראשוני ומשני) המתארים את מסעי הצלב. זהו את נקודת המבט של כל כותב, והסבירו במה הן דומות ובמה הן שונות."
-            },
-            {
-                title: "מדעים (אוריינות)",
-                subtitle: "מיומנות: ניתוח גרף",
-                task: "לפניכם גרף עמודות המתאר כמות משקעים שנתית באזורים שונים. נתחו את הגרף וכתבו 3 מסקנות שונות שניתן להסיק ממנו על הקשר בין כמות המשקעים לסוג הצמחייה."
-            }
-        ];
-
-        // --- הפניות לרכיבי DOM ---
-        const studentCardSlot = document.getElementById('student-card-slot');
-        const taskCardSlot = document.getElementById('task-card-slot');
-        const shuffleStudentButton = document.getElementById('shuffleStudentButton');
-        const shuffleTaskButton = document.getElementById('shuffleTaskButton');
-        const studentCountDisplay = document.getElementById('student-count');
-        const taskCountDisplay = document.getElementById('task-count');
-
-        // --- פונקציות ---
-
-        /**
-         * יוצר ומציג קלף תלמיד עם אנימציה
-         */
-        async function renderStudentCard(student) {
-            studentCardSlot.classList.add('fade-out'); // התחל אנימציית יציאה
-            await new Promise(r => setTimeout(r, 300)); // המתן לאנימציה
-
-            let profileHtml = '';
-            for (const [key, value] of Object.entries(student.profile)) {
-                profileHtml += `
-                    <h4>${key}</h4>
-                    <p>${value}</p>
-                `;
-            }
-
-            studentCardSlot.innerHTML = `
-                <div class="card-title">${student.title}</div>
-                <div class="card-subtitle">${student.subtitle}</div>
-                <div class="card-content">
-                    ${profileHtml}
-                </div>
-            `;
-            studentCardSlot.classList.remove('fade-out');
-            studentCardSlot.classList.add('fade-in'); // התחל אנימציית כניסה
-        }
-
-        /**
-         * יוצר ומציג קלף משימה עם אנימציה
-         */
-        async function renderTaskCard(task) {
-            taskCardSlot.classList.add('fade-out'); // התחל אנימציית יציאה
-            await new Promise(r => setTimeout(r, 300)); // המתן לאנימציה
-
-            taskCardSlot.innerHTML = `
-                <div class="card-title">${task.title}</div>
-                <div class="card-subtitle">${task.subtitle}</div>
-                <div class="card-content">
-                    <h4>משימה:</h4>
-                    <p>${task.task}</p>
-                </div>
-            `;
-            taskCardSlot.classList.remove('fade-out');
-            taskCardSlot.classList.add('fade-in'); // התחל אנימציית כניסה
-        }
-
-        /**
-         * שולף תלמיד אקראי ומציג אותו
-         */
-        function drawRandomStudent() {
-            const randomStudentIndex = Math.floor(Math.random() * studentsData.length);
-            const selectedStudent = studentsData[randomStudentIndex];
-            renderStudentCard(selectedStudent);
-        }
-
-        /**
-         * שולף משימה אקראית ומציג אותה
-         */
-        function drawRandomTask() {
-            const randomTaskIndex = Math.floor(Math.random() * tasksData.length);
-            const selectedTask = tasksData[randomTaskIndex];
-            renderTaskCard(selectedTask);
-        }
-
-        /**
-         * מעדכן את מניין הקלפים המוצג בחפיסות הויזואליות
-         */
-        function updateDeckCounts() {
-            studentCountDisplay.textContent = studentsData.length;
-            taskCountDisplay.textContent = tasksData.length;
-        }
-
-        // --- הפעלה ---
-
-        // האזנה לכפתורי הערבוב הנפרדים
-        shuffleStudentButton.addEventListener('click', drawRandomStudent);
-        shuffleTaskButton.addEventListener('click', drawRandomTask);
-
-        // טעינה ראשונית של הדף
-        document.addEventListener('DOMContentLoaded', () => {
-            drawRandomStudent(); // הגרלת תלמיד ראשון
-            drawRandomTask();    // הגרלת משימה ראשונה
-            updateDeckCounts();  // עדכון מניין הקלפים
-        });
-
-    </script>
-</body>
-</html>
+                    "מיומנויות": "מעולה בפתרון בעיות. מיומנו
