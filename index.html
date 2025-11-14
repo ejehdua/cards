@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מסמלצים למידה פרסונלית</title>
+    <style>
+        /* --- הגדרות כלליות --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* --- פריסה ראשית (עם הפתקה בצד) --- */
+        .simulation-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .main-area {
+            flex: 3; /* אזור הסימולציה יתפוס 3/4 מהרוחב */
+        }
+
+        .notes-area {
+            flex: 1; /* הפתקה תתפוס 1/4 מהרוחב */
+        }
+
+        /* --- כותרות וכפתור --- */
+        h1 {
+            text-align: center;
+            color: #005a9c;
+        }
+
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        #randomizeButton {
+            font-size: 1.2rem;
+            padding: 12px 25px;
+            background-color: #007aff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #randomizeButton:hover {
+            background-color: #005bb5;
+        }
+
+        /* --- אזור הקלפים הפעילים --- */
+        .active-cards-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start; /* שומר על גובה אחיד מלמעלה */
+            gap: 20px;
+            min-height: 500px; /* גובה מינימלי להחזיק קלפים */
+        }
+
+        /* --- עיצוב קלף בסיסי --- */
+        .card {
+            width: 45%;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .card-subtitle {
+            font-size: 1rem;
+            font-weight: normal;
+            color: #555;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .card-content h4 {
+            font-size: 1rem;
+            color: #005a9c;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
+        .card-content ul {
+            padding-right: 20px;
+            margin: 0;
+        }
+        
+        .card-content li, .card-content p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        /* --- צבעים שונים לקלפים --- */
+        #student-card-slot {
+            border-top: 5px solid #007aff; /* כחול לתלמיד */
+        }
+
+        #task-card-slot {
+            border-top: 5px solid #34c759; /* ירוק למשימה */
+        }
+
+        /* --- אזור ה"חפיסה" (הקרוסלה) --- */
+        .deck-area {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .deck-area h3 {
+            text-align: center;
+            color: #777;
+            font-weight: 500;
+        }
+
+        .deck-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .deck-card {
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            color: #495057;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        /* --- עיצוב הפתקה בצד --- */
+        .notes-area h3 {
+            color: #333;
+            text-align: center;
+        }
+
+        #insights-notepad {
+            width: 95%;
+            height: 70vh; /* גובה רב לכתיבה נוחה */
+            padding: 15px;
+            font-family: 'Arial', sans-serif; /* פונט שמרגיש כמו פתקה */
+            font-size: 1rem;
+            border: 1px solid #e6db74;
+            background-color: #ffc; /* צהוב בהיר קלאסי */
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+            line-height: 1.5;
+            resize: none; /* למנוע שינוי גודל */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="simulation-container">
+        <div class="main-area">
+            <h1>מסמלצים למידה פרסונלית</h1>
+
+            <div class="controls">
+                <button id="randomizeButton">ערבב והצג זוג אקראי</button>
+            </div>
+
+            <div class="active-cards-container">
+                <div class="card" id="student-card-slot">
+                    </div>
+                <div class="card" id="task-card-slot">
+                    </div>
+            </div>
+
+            <div class="deck-area">
+                <h3>חפיסת התלמידים</h3>
+                <div class="deck-container" id="student-deck">
+                    </div>
+                <h3>חפיסת התוכן</h3>
+                <div class="deck-container" id="task-deck">
+                    </div>
+            </div>
+        </div>
+
+        <div class="notes-area">
+            <h3>📝 פתקת תובנות אישית</h3>
+            <textarea id="insights-notepad" placeholder="כתבו כאן תובנות, שאלות, רעיונות להתאמה, פיגומים נדרשים..."></textarea>
+        </div>
+    </div>
+
+    <script>
+        // --- מאגר הנתונים (Data) ---
+
+        const studentsData = [
+            {
+                title: "אורי",
+                subtitle: "כיתה ח'",
+                profile: {
+                    "ידע ורמות חשיבה": "ידע רחב, מבין ומסביר מושגים מהר. משתמש בהבנה וניתוח, אך נמנע מרמות חשיבה גבוהות (הערכה, יצירה) וממשימות פתוחות מחשש לטעות.",
+                    "נתונים אישיים": "בן בכור למשפחה תומכת ודורשנית. חש לחץ להצטיינות ולא לאכזב.",
+                    "מיומנויות": "מאורגן מאוד, עובד לאט. מתקשה בפירוק משימות גדולות. חזק בטקסטים, חלש בייצוגים חזותיים.",
+                    "מוטיבציה": "בינונית-גבוהה. אוהב להצליח, אך אי-ודאות מורידה לו את המוטיבציה.",
+                    "שייכות": "מרגיש 'החכם של הכיתה', אך דימוי זה מרחיק אותו חברתית.",
+                    "תחושת מסוגלות": "גבוהה במסגרת ברורה. נמוכה כשיש דרישה ליצירתיות או גמישות.",
+                    "ניהול למידה": "מבצע משימות, נשחק מהר במשימות ארוכות. לא יודע לבקש עזרה בזמן."
+                }
+            },
+            {
+                title: "רוני",
+                subtitle: "כיתה ז'",
+                profile: {
+                    "ידע ורמות חשיבה": "ידע חלקי ולא עקבי בגלל קושי בקריאה. בהקראה בעל פה - ההבנה גבוהה ומגיעה לרמות חשיבה גבוהות (השוואה, זיהוי דפוסים, נימוק).",
+                    "נתונים אישיים": "מגיעה ממשפחה עם קשיים כלכליים. לוקחת הרבה אחריות על אחים קטנים.",
+                    "מיומנויות": "קריאה איטית, כתיבה בסיסית. מצטיינת בויזואליזציה (תרשימים, ציורים, מודלים).",
+                    "מוטיבציה": "גבוהה מאוד. רוצה להצליח כמו כולם.",
+                    "שייכות": "שייכות חברתית חזקה. אהובה ומשפיעה.",
+                    "תחושת מסוגלות": "נמוכה מאוד בקריאה ('אני גרועה בזה'). גבוהה מאוד בהבעה יצירתית.",
+                    "ניהול למידה": "יודעת לבקש עזרה. לא יודעת לחלק זמן. טקסטים ארוכים מתישים אותה."
+                }
+            },
+            {
+                title: "אדם",
+                subtitle: "כיתה ט'",
+                profile: {
+                    "ידע ורמות חשיבה": "ידע רחב ומעמיק, מצטיין בניתוח, הערכה ויצירה. מתקשה עם עומק רגשי או תרבותי בטקסטים ועם פירוש רמזים חברתיים.",
+                    "נתונים אישיים": "ילד יחיד, עולה חדש מסביבה דיגיטלית מתקדמת. עברית טובה אך חסר עומק תרבותי.",
+                    "מיומנויות": "מעולה בפתרון בעיות. מיומנויות תקשורת בין-אישית נמוכות. מתקשה מאוד בעבודת צוות.",
+                    "מוטיבציה": "לומד בשביל הישגים (חיצונית). מוטיבציה פנימית נמוכה.",
+                    "שייכות": "מרגיש זר, כמעט ללא חברים. 'שקוף' חברתית.",
+                    "תחושת מסוגלות": "גבוהה מאוד במשימות קוגניטיביות. נמוכה במשימות שדורשות שיח, הבעה או עבודה יחד.",
+                    "ניהול למידה": "עצמאי מאוד, משלים חומר לבד, אך לא משתף פעולה."
+                }
+            },
+            {
+                title: "הודיה",
+                subtitle: "כיתה ז'",
+                profile: {
+                    "ידע ורמות חשיבה": "ידע בסיסי ולא יציב (קושי בלמידה עקבית). מבינה ומיישמת, מתקשה בניתוח והסקת מסקנות. מציפה רעיונות יצירתיים, לא תמיד מבוססים.",
+                    "נתונים אישיים": "משפחה חמה, אך עם עומס בבית (אב עובד שעות רבות, אם מתמודדת עם קשיים בריאותיים).",
+                    "מיומנויות": "ריכוז נמוך, סף תסכול נמוך. יכולת גבוהה בעבודה יצירתית ומעשית (ציור, חפצים). זקוקה למסגרות קצרות וברורות.",
+                    "מוטיבציה": "גבוהה בתחילת משימה, אך יורדת מהר.",
+                    "שייכות": "מרגישה שמכירים אותה, אך לא מעריכים. תופסת עצמה כ'מפריעה'.",
+                    "תחושת מסוגלות": "נמוכה בלמידה פורמלית. גבוהה מאוד במשימות יצירתיות ומעשיות.",
+                    "ניהול למידה": "לא מצליחה לנהל זמן לבד. צריכה ליווי, תזכורות וחלוקה למשימות קטנות."
+                }
+            },
+            {
+                title: "ליאן",
+                subtitle: "כיתה ח'",
+                profile: {
+                    "ידע ורמות חשיבה": "ידע טוב אך עם 'חורים' בגלל היעדרויות. מסוגלת לנתח, אך מתקשה ליישם בעקביות. נוטה לשינון במקום הבנה.",
+                    "נתונים אישיים": "אמא חד הורית. לוקחת הרבה אחריות בבית על אחים. עומס רגשי משמעותי.",
+                    "מיומנויות": "כתיבה טובה, זיכרון טוב לטווח קצר. מתקשה בארגון חומר למבחנים.",
+                    "מוטיבציה": "נמוכה מאוד. מרגישה מותשת.",
+                    "שייכות": "יש לה 2 חברות טובות, אך לא מרגישה חלק מהכיתה.",
+                    "תחושת מסוגלות": "נמוכה. ('אני לא מספיק טובה'). הצלחות קטנות משפיעות עליה מיד לטובה.",
+                    "ניהול למידה": "בדרך כלל לא מכינה שיעורי בית (מתוך עומס ועייפות, לא חוסר רצון)."
+                }
+            }
+        ];
+
+        const tasksData = [
+            {
+                title: "מדעים",
+                subtitle: "תוכן (כיתה ז'): מאפייני חיים",
+                task: "השוו בטבלה בין מאפייני החיים השונים (נשימה, תזונה, רבייה, תגובה לגירויים וכו') כפי שהם באים לידי ביטוי בצמחים ובבעלי חיים."
+            },
+            {
+                title: "מתמטיקה",
+                subtitle: "תוכן (כיתה ז'): יחס ופרופורציה",
+                task: "פתרו בעיה מילולית בנושא יחס ופרופורציה, הקשורה למתכון אפייה (למשל: 'המתכון דורש 3 כוסות קמח ל-2 כוסות סוכר. כמה סוכר נצטרך אם נשתמש ב-5 כוסות קמח?')."
+            },
+            {
+                title: "תנ\"ך ממלכתי",
+                subtitle: "תוכן (כיתה ז'): סיפורי דוד ושאול",
+                task: "בחרו דמות אחת מסיפורי דוד ושאול (למשל: יהונתן, מיכל, שמואל). כתבו קטע קצר המתאר את מערכת היחסים שלה עם דוד, ובססו את דבריכם על שני פסוקים מהטקסט."
+            },
+            {
+                title: "גיאוגרפיה",
+                subtitle: "תוכן (כיתה ז'): מדבור",
+                task: "צרו תרשים זרימה ויזואלי (או מפת מושגים) המתאר את הגורמים וההשפעות של תהליך המדבור באזורי ספר המדבר בישראל."
+            },
+            {
+                title: "היסטוריה חמ\"ד",
+                subtitle: "תוכן (כיתה ז'): תור הזהב בספרד",
+                task: "הכינו 5 שקפים למצגת קצרה המתארת את חיי הקהילה היהודית בספרד בתקופת 'תור הזהב' (בהיבטי כלכלה, תרבות ויחסים עם השלטון המוסלמי)."
+            },
+            {
+                title: "היסטוריה חמ\"ד (אוריינות)",
+                subtitle: "מיומנות: השוואת מקורות",
+                task: "קראו שני מקורות היסטוריים קצרים (ראשוני ומשני) המתארים את מסעי הצלב. זהו את נקודת המבט של כל כותב, והסבירו במה הן דומות ובמה הן שונות."
+            },
+            {
+                title: "מדעים (אוריינות)",
+                subtitle: "מיומנות: ניתוח גרף",
+                task: "לפניכם גרף עמודות המתאר כמות משקעים שנתית באזורים שונים. נתחו את הגרף וכתבו 3 מסקנות שונות שניתן להסיק ממנו על הקשר בין כמות המשקעים לסוג הצמחייה."
+            }
+        ];
+
+        // --- הפניות לרכיבי DOM ---
+        const studentSlot = document.getElementById('student-card-slot');
+        const taskSlot = document.getElementById('task-card-slot');
+        const randomizeButton = document.getElementById('randomizeButton');
+        const studentDeckContainer = document.getElementById('student-deck');
+        const taskDeckContainer = document.getElementById('task-deck');
+
+        // --- פונקציות ---
+
+        /**
+         * יוצר ומציג קלף תלמיד
+         */
+        function renderStudentCard(student) {
+            let profileHtml = '';
+            // יצירת רשימת תכונות מתוך אובייקט הפרופיל
+            for (const [key, value] of Object.entries(student.profile)) {
+                profileHtml += `
+                    <h4>${key}</h4>
+                    <p>${value}</p>
+                `;
+            }
+
+            studentSlot.innerHTML = `
+                <div class="card-title">${student.title}</div>
+                <div class="card-subtitle">${student.subtitle}</div>
+                <div class="card-content">
+                    ${profileHtml}
+                </div>
+            `;
+        }
+
+        /**
+         * יוצר ומציג קלף משימה
+         */
+        function renderTaskCard(task) {
+            taskSlot.innerHTML = `
+                <div class="card-title">${task.title}</div>
+                <div class="card-subtitle">${task.subtitle}</div>
+                <div class="card-content">
+                    <h4>משימה:</h4>
+                    <p>${task.task}</p>
+                </div>
+            `;
+        }
+
+        /**
+         * פונקציה ראשית להגרלת זוג קלפים
+         */
+        function drawRandomPair() {
+            // קבלת אינדקס אקראי מכל מערך
+            const randomStudentIndex = Math.floor(Math.random() * studentsData.length);
+            const randomTaskIndex = Math.floor(Math.random() * tasksData.length);
+
+            // קבלת אובייקט הנתונים
+            const selectedStudent = studentsData[randomStudentIndex];
+            const selectedTask = tasksData[randomTaskIndex];
+
+            // הצגת הקלפים
+            renderStudentCard(selectedStudent);
+            renderTaskCard(selectedTask);
+        }
+
+        /**
+         * יוצר את תצוגת ה"חפיסה" (קלפים קטנים)
+         */
+        function populateDecks() {
+            // יצירת חפיסת תלמידים
+            studentsData.forEach(student => {
+                const deckCard = document.createElement('div');
+                deckCard.className = 'deck-card';
+                deckCard.textContent = `${student.title} (${student.subtitle})`;
+                studentDeckContainer.appendChild(deckCard);
+            });
+
+            // יצירת חפיסת משימות
+            tasksData.forEach(task => {
+                const deckCard = document.createElement('div');
+                deckCard.className = 'deck-card';
+                deckCard.textContent = task.title;
+                taskDeckContainer.appendChild(deckCard);
+            });
+        }
+
+        // --- הפעלה ---
+
+        // האזנה לכפתור
+        randomizeButton.addEventListener('click', drawRandomPair);
+
+        // טעינה ראשונית של הדף
+        document.addEventListener('DOMContentLoaded', () => {
+            populateDecks();    // יצירת החפיסות
+            drawRandomPair();   // הגרלת זוג ראשון
+        });
+
+    </script>
+</body>
+</html>
